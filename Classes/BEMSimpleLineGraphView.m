@@ -1309,9 +1309,17 @@ typedef NS_ENUM(NSInteger, BEMInternalTags)
 	    return YES;
 }
 
-- (void)handleGestureAction:(UIGestureRecognizer *)recognizer {
-    CGPoint translation = [recognizer locationInView:self.viewForBaselineLayout];
-    
+- (void)setSelectedIndex:(NSInteger)selectedIndex {
+    NSInteger numberOfPoints = [self.dataSource numberOfPointsInLineGraph: self];
+    CGFloat widthPerPoint = self.bounds.size.width / (CGFloat)numberOfPoints;
+    CGFloat neededWith = widthPerPoint * (CGFloat)(selectedIndex + 1);
+    CGPoint translation = CGPointMake(neededWith, 40);
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self addPointWithTranslation: translation];
+    });
+}
+
+- (void)addPointWithTranslation:(CGPoint)translation {
     if (!((translation.x + self.frame.origin.x) <= self.frame.origin.x) && !((translation.x + self.frame.origin.x) >= self.frame.origin.x + self.frame.size.width)) { // To make sure the vertical line doesn't go beyond the frame of the graph.
         self.touchInputLine.frame = CGRectMake(translation.x - self.widthTouchInputLine/2, 0, self.widthTouchInputLine, self.frame.size.height);
     }
@@ -1339,34 +1347,12 @@ typedef NS_ENUM(NSInteger, BEMInternalTags)
 #pragma clang diagnostic pop
         }
     }
+}
+
+- (void)handleGestureAction:(UIGestureRecognizer *)recognizer {
+    CGPoint translation = [recognizer locationInView:self.viewForBaselineLayout];
     
-    // ON RELEASE
-    if (recognizer.state == UIGestureRecognizerStateEnded) {
-        if ([self.delegate respondsToSelector:@selector(lineGraph:didReleaseTouchFromGraphWithClosestIndex:)]) {
-            [self.delegate lineGraph:self didReleaseTouchFromGraphWithClosestIndex:(closestDot.tag - DotFirstTag100)];
-            
-        } else if ([self.delegate respondsToSelector:@selector(didReleaseGraphWithClosestIndex:)]) {
-            [self printDeprecationWarningForOldMethod:@"didReleaseGraphWithClosestIndex:" andReplacementMethod:@"lineGraph:didReleaseTouchFromGraphWithClosestIndex:"];
-            
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-            [self.delegate didReleaseGraphWithClosestIndex:(closestDot.tag - DotFirstTag100)];
-#pragma clang diagnostic pop
-        }
-        
-        [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-            if (self.alwaysDisplayDots == NO && self.displayDotsOnly == NO) {
-                closestDot.alpha = 0;
-            }
-            
-            self.touchInputLine.alpha = 0;
-            if (self.enablePopUpReport == YES) {
-                self.popUpView.alpha = 0;
-                self.popUpLabel.alpha = 0;
-//                self.customPopUpView.alpha = 0;
-            }
-        } completion:nil];
-    }
+    [self addPointWithTranslation: translation];
 }
 
 - (CGFloat)distanceToClosestPoint {
@@ -1397,16 +1383,16 @@ typedef NS_ENUM(NSInteger, BEMInternalTags)
         self.popUpLabel.text = [NSString stringWithFormat:@"%li", (long)[dataPoints[(NSInteger) closestDot.tag - DotFirstTag100] integerValue]];
     
     if (self.enableYAxisLabel == YES && self.popUpView.frame.origin.x <= self.YAxisLabelXOffset && !self.positionYAxisRight) {
-        self.xCenterLabel = self.popUpView.frame.size.width/2;
+//        self.xCenterLabel = self.popUpView.frame.size.width/2;
         popUpViewCenter = CGPointMake(self.xCenterLabel + self.YAxisLabelXOffset + 1, self.yCenterLabel);
     } else if ((self.popUpView.frame.origin.x + self.popUpView.frame.size.width) >= self.frame.size.width - self.YAxisLabelXOffset && self.positionYAxisRight) {
-        self.xCenterLabel = self.frame.size.width - self.popUpView.frame.size.width/2;
+//        self.xCenterLabel = self.frame.size.width - self.popUpView.frame.size.width/2;
         popUpViewCenter = CGPointMake(self.xCenterLabel - self.YAxisLabelXOffset, self.yCenterLabel);
     } else if (self.popUpView.frame.origin.x <= 0) {
-        self.xCenterLabel = self.popUpView.frame.size.width/2;
+//        self.xCenterLabel = self.popUpView.frame.size.width/2;
         popUpViewCenter = CGPointMake(self.xCenterLabel, self.yCenterLabel);
     } else if ((self.popUpView.frame.origin.x + self.popUpView.frame.size.width) >= self.frame.size.width) {
-        self.xCenterLabel = self.frame.size.width - self.popUpView.frame.size.width/2;
+//        self.xCenterLabel = self.frame.size.width - self.popUpView.frame.size.width/2;
         popUpViewCenter = CGPointMake(self.xCenterLabel, self.yCenterLabel);
     }
     
