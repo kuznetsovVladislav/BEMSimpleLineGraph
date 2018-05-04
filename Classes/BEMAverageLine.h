@@ -9,7 +9,6 @@
 @import Foundation;
 @import UIKit;
 
-
 /// A line displayed horizontally across the graph at the average y-value
 @interface BEMAverageLine : NSObject
 
