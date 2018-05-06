@@ -1384,21 +1384,21 @@ typedef NS_ENUM(NSInteger, BEMInternalTags)
     
     if (self.enableYAxisLabel == YES && self.popUpView.frame.origin.x <= self.YAxisLabelXOffset && !self.positionYAxisRight) {
 //        self.xCenterLabel = self.popUpView.frame.size.width/2;
-        popUpViewCenter = CGPointMake(self.xCenterLabel + self.YAxisLabelXOffset + 1, self.yCenterLabel);
+//        popUpViewCenter = CGPointMake(self.xCenterLabel + self.YAxisLabelXOffset + 1, self.yCenterLabel);
     } else if ((self.popUpView.frame.origin.x + self.popUpView.frame.size.width) >= self.frame.size.width - self.YAxisLabelXOffset && self.positionYAxisRight) {
 //        self.xCenterLabel = self.frame.size.width - self.popUpView.frame.size.width/2;
-        popUpViewCenter = CGPointMake(self.xCenterLabel - self.YAxisLabelXOffset, self.yCenterLabel);
+//        popUpViewCenter = CGPointMake(self.xCenterLabel - self.YAxisLabelXOffset, self.yCenterLabel);
     } else if (self.popUpView.frame.origin.x <= 0) {
 //        self.xCenterLabel = self.popUpView.frame.size.width/2;
-        popUpViewCenter = CGPointMake(self.xCenterLabel, self.yCenterLabel);
+//        popUpViewCenter = CGPointMake(self.xCenterLabel, self.yCenterLabel);
     } else if ((self.popUpView.frame.origin.x + self.popUpView.frame.size.width) >= self.frame.size.width) {
 //        self.xCenterLabel = self.frame.size.width - self.popUpView.frame.size.width/2;
-        popUpViewCenter = CGPointMake(self.xCenterLabel, self.yCenterLabel);
+//        popUpViewCenter = CGPointMake(self.xCenterLabel, self.yCenterLabel);
     }
     
     if (self.popUpView.frame.origin.y <= 2) {
-        self.yCenterLabel = closestDot.center.y + closestDot.frame.size.height/2 + 15;
-        popUpViewCenter = CGPointMake(self.xCenterLabel, closestDot.center.y + closestDot.frame.size.height/2 + 15);
+//        self.yCenterLabel = closestDot.center.y + closestDot.frame.size.height/2 + 15;
+//        popUpViewCenter = CGPointMake(self.xCenterLabel, closestDot.center.y + closestDot.frame.size.height/2 + 15);
     }
 
     if (!CGPointEqualToPoint(popUpViewCenter, CGPointZero)) {
